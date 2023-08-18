@@ -23,6 +23,7 @@ import * as Yup from "yup";
 
 //icons
 import { FiMail, FiLock, FiUser, FiCalendar } from "react-icons/fi";
+import axios from "axios";
 
 const Signup = () => {
   const initialValues = {
@@ -36,13 +37,30 @@ const Signup = () => {
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email adress").required("Required"),
     name: Yup.string().required("Required"),
-    password: Yup.string().min(8, "Password is too short").max(30, "Password  is too long").required("Required"),
+    password: Yup.string()
+      .min(8, "Password is too short")
+      .max(30, "Password  is too long")
+      .required("Required"),
     //repeatPassword: Yup.string().oneOf([Yup.ref("password"), ""], "Password must match").required("Required"),
-  })
+  });
 
-  const onSubmit = values => {
-    console.log("Form data", values);
-  }
+  const onSubmit = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/accounts",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      console.log("Server Response: ", response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -51,41 +69,47 @@ const Signup = () => {
         <StyledTitle color={colors.theme} size={30}>
           Member Signup
         </StyledTitle>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-          {formik => {
-            return <Form>
-              <TextInput
-                name="name"
-                type="text"
-                label="Full Name"
-                placeholder="Peter Schmidt"
-                icon={<FiUser />}
-              />
-              <TextInput
-                name="email"
-                type="text"
-                label="Email Address"
-                placeholder="peterschmidt@example.gmail"
-                icon={<FiMail />}
-              />
-              <TextInput
-                name="dateOfBirth"
-                type="date"
-                label="Date of Birth"
-                icon={<FiCalendar />}
-              />
-              <TextInput
-                name="password"
-                type="password"
-                label="Password"
-                placeholder="**********"
-                icon={<FiLock />}
-              />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {(formik) => {
+            return (
+              <Form>
+                <TextInput
+                  name="name"
+                  type="text"
+                  label="Full Name"
+                  placeholder="Peter Schmidt"
+                  icon={<FiUser />}
+                />
+                <TextInput
+                  name="email"
+                  type="text"
+                  label="Email Address"
+                  placeholder="peterschmidt@example.gmail"
+                  icon={<FiMail />}
+                />
+                <TextInput
+                  name="dateOfBirth"
+                  type="date"
+                  label="Date of Birth"
+                  icon={<FiCalendar />}
+                />
+                <TextInput
+                  name="password"
+                  type="password"
+                  label="Password"
+                  placeholder="**********"
+                  icon={<FiLock />}
+                />
 
-              <ButtonGroup>
-                <StyledFormButton type="submit">Signup</StyledFormButton>
-              </ButtonGroup>
-            </Form>
+                <ButtonGroup>
+                  <StyledFormButton type="submit">Signup</StyledFormButton>
+                </ButtonGroup>
+              </Form>
+            );
           }}
         </Formik>
         <ExtraText>
