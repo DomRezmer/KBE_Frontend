@@ -1,5 +1,6 @@
 //styled components
 import React from "react";
+import axios from "axios";
 import {
   //StyledTextInput,
   StyledFormArea,
@@ -23,7 +24,6 @@ import * as Yup from "yup";
 
 //icons
 import { FiMail, FiLock, FiUser, FiCalendar } from "react-icons/fi";
-import axios from "axios";
 
 const Signup = () => {
   const initialValues = {
