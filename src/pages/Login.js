@@ -1,5 +1,5 @@
 //styled components
-
+import axios from "axios";
 import {
   //StyledTextInput,
   StyledFormArea,
@@ -46,8 +46,30 @@ const Login = () => {
               .max(30, "Password  is too long")
               .required("Required"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const respone = await axios.post(
+                "http://localhost:8080/api/v1/accounts/login",
+                {
+                  email: values.email,
+                  password: values.password,
+                }
+              );
+
+              if (respone.status === 200) {
+                alert("Account exists");
+              } else {
+                console.log("Invalid credentials");
+                alert("Invalid credentials");
+              }
+            } catch (error) {
+              if (error.response && error.response.status === 401) {
+                alert("Invalid credentials");
+              } else {
+                console.log(error);
+                alert("An error occured while logging in");
+              }
+            }
           }}
         >
           {() => (
