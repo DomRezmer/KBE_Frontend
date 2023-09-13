@@ -47,7 +47,7 @@ const Signup = () => {
   const onSubmit = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/accounts",
+        "http://localhost:8081/api/accounts",
         values,
         {
           headers: {
